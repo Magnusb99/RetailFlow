@@ -16,7 +16,7 @@
         v-for="product in products"
         :key="product.id"
         :variant="isInCart(product.id) ? 'outline' : 'subtle'"
-        class="hover:bg-accented cursor-pointer active:scale-98 active:ring-2 transition active:bg-neutral-800"
+        class="hover:bg-accented cursor-pointer active:scale-98 active:ring-2 transition "
         @click="addItem(product)"
       >
         <template #header
