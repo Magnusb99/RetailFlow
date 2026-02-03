@@ -16,7 +16,7 @@
         v-for="product in products"
         :key="product.id"
         variant="subtle"
-        class="hover:bg-accented cursor-pointer active:scale-98 active:bg-neutral-800"
+        class="hover:bg-accented cursor-pointer active:scale-98 active:ring-2 active:ring-white/40 transition active:bg-neutral-800"
         @click="addItem(product)"
       >
         <template #header
