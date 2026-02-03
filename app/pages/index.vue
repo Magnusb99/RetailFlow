@@ -25,7 +25,7 @@
             <UButton
               variant="soft"
               class="ml-auto"
-              icon="line-md:plus"
+              :icon="{isInCart(product.id) ? 'line-md:plus' : 'line-md:check-all'}"
               color="success"
             /></div
         ></template>
