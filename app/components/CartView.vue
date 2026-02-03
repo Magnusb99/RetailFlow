@@ -3,7 +3,7 @@
     <UChip :show="!!cartItem.id">
       <UButton
         trailing-icon="typcn:shopping-cart"
-        label="Varukorg"
+        :label="cartItem.id ? 'Varukorg' : ''"
         variant="soft"
       />
     </UChip>
