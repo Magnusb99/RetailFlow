@@ -34,6 +34,7 @@
         {{ product.price }} :-
       </UCard>
     </UContainer>
+    <CartView class="absolute bottom-10 right-10  "/>
   </UContainer>
 </template>
 
