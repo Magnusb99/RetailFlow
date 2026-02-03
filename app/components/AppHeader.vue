@@ -7,7 +7,7 @@
     <UNavigationMenu :items="items" />
 
     <template #right>
-      <CartView class="absolute bottom-10 right-10  " />
+      <CartView />
     </template>
   </UHeader>
 </template>
