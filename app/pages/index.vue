@@ -15,8 +15,8 @@
       <UCard
         v-for="product in products"
         :key="product.id"
-        variant="subtle"
-        class="hover:bg-accented cursor-pointer active:scale-98 active:ring-2 active:ring-white/40 transition active:bg-neutral-800"
+        :variant="isInCart(product.id) ? 'solid' : 'subtle'"
+        class="hover:bg-accented cursor-pointer active:scale-98 active:ring-2 transition active:bg-neutral-800 focus:ring-black/40"
         @click="addItem(product)"
       >
         <template #header
@@ -54,6 +54,7 @@ const cartStore = useCartStore();
 function addItem(product: CartItem) {
   cartStore.addToCart(product);
 }
+const isInCart = (id: number) => cartStore.item?.id === id;
 </script>
 
 <style scoped></style>
