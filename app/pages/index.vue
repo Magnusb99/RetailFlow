@@ -1,5 +1,5 @@
 <template>
-  <UContainer class="px-5 mt-5 mb-15">
+  <UContainer class="px-5 mt-5 mb-25">
     <UPageHeader
       title="Välkommen till RetailFlow"
       description="Du kan bara köpa en vara i taget"
@@ -16,7 +16,10 @@
         v-for="product in products"
         :key="product.id"
         :variant="isInCart(product.id) ? 'outline' : 'subtle'"
-        class="hover:bg-accented cursor-pointer active:scale-98 active:ring-2 transition "
+        :class="[
+          'hover:bg-accented cursor-pointer transition',
+          isInCart(product.id) ? 'ring-success' : '',
+        ]"
         @click="addItem(product)"
       >
         <template #header
@@ -25,7 +28,9 @@
             <UButton
               variant="soft"
               class="ml-auto"
-              :icon="isInCart(product.id) ? 'line-md:check-all' : 'line-md:plus'"
+              :icon="
+                isInCart(product.id) ? 'line-md:check-all' : 'line-md:plus'
+              "
               color="success"
             /></div
         ></template>
@@ -34,7 +39,7 @@
         {{ product.price }} :-
       </UCard>
     </UContainer>
-   <CartView class="fixed bottom-10 right-10"/>
+    <CartView class="fixed bottom-10 right-10" />
   </UContainer>
 </template>
 

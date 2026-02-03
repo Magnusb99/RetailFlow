@@ -3,7 +3,8 @@
     <UChip :show="!!cartItem.id">
       <UButton
         trailing-icon="typcn:shopping-cart"
-        :label="cartItem.id ? 'Varukorg' : null "
+        class="text-lg btn"
+        :label="cartItem.id ? 'Gå till kassa' : undefined"
         color="neutral"
         size="xl"
       />
