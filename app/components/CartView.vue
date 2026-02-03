@@ -4,7 +4,8 @@
       <UButton
         trailing-icon="typcn:shopping-cart"
         :label="cartItem.id ? 'Varukorg' : ''"
-        variant="soft"
+        color="neutral"
+        size="xl"
       />
     </UChip>
     <template #body>
