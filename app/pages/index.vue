@@ -1,5 +1,5 @@
 <template>
-  <UContainer class="px-5 my-5">
+  <UContainer class="px-5 mt-5 mb-15">
     <UPageHeader
       title="Välkommen till RetailFlow"
       description="Du kan bara köpa en vara i taget"
