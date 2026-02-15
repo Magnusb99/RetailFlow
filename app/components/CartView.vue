@@ -64,6 +64,12 @@ const totalPrice = computed(() => {
 const removeCartItem = () => {
   cartStore.resetCart();
 };
+watch(
+  () => cartItem.value?.id,
+  (newId) => {
+    if (newId) open.value = true
+  }
+)
 </script>
 
 <style scoped></style>
