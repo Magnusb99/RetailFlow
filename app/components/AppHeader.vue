@@ -25,11 +25,6 @@ const items = computed(() => [
     to: "/support",
     active: route.path.startsWith("/support"),
   },
-  {
-    label: "Test",
-    to: "/test",
-    active: route.path.startsWith("/test"),
-  },
 ]);
 </script>
 
