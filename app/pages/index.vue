@@ -37,7 +37,7 @@
         {{ product.name }}
         <br />
         {{ product.price }} :-
-      </UCard>
+      </UCardn
     </UContainer>
     <CartView class="fixed bottom-10 right-10" /> 
   </UContainer>
