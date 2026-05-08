@@ -9,9 +9,7 @@
       }"
     />
 
-    <UContainer
-      class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 my-6"
-    >
+    <UContainer class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 my-6">
       <UCard
         v-for="product in products"
         :key="product.id"
@@ -37,7 +35,7 @@
         {{ product.name }}
         <br />
         {{ product.price }} :-
-      </UCardn
+          </UCard>
     </UContainer>
     <CartView class="fixed bottom-10 right-10" /> 
   </UContainer>
