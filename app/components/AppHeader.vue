@@ -1,31 +1,10 @@
 <template>
-  <UHeader>
-    <template #title>
-      <Logo class="h-6 w-auto" />
-    </template>
-
-    <UNavigationMenu :items="items" />
-
-    <template #right>
-       
-    </template>
-  </UHeader>
+  <div class="h-[10vh] flex items-center justify-between gap-4 px-5 border-b">
+    <h1 class="font-bold text-2xl">Retail Flow</h1>
+    <UButton to="/support" label="Support" />
+  </div>
 </template>
 
-<script setup lang="ts">
-const route = useRoute();
-const items = computed(() => [
-  {
-    label: "Produkter",
-    to: "/",
-    active: route.path.startsWith("/"),
-  },
-  {
-    label: "Support",
-    to: "/support",
-    active: route.path.startsWith("/support"),
-  },
-]);
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>
