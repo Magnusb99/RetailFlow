@@ -1,0 +1,8 @@
+{
+  "label": "Dörr 1",
+  "doorId": "0001",
+  "class": {
+    "container": "bg-accented rounded-lg p-4",
+    "text": "text-white"
+  }
+}

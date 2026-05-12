@@ -1,66 +1,41 @@
 <template>
   <UContainer class="px-5 mt-5 mb-25">
-    <UPageHeader
-      title="Välkommen till RetailFlow"
-      class="text-center py-2"
-      :ui="{
-        title: 'mx-auto',
-      }"
+    <UPageHero
+      title="Välkommen till Retail flow"
+      description="Om du ser detta har du nog hamnat fel!"
     />
-
-    <UContainer class="flex flex-col items-center gap-4 my-6">
-      <p v-if="status === 'pending'">Väntar på BankID...</p>
-      <p v-if="message">{{ message }}</p>
-      <UButton
-        label="Öppna dörr med bankID"
-        leading-icon="arcticons:bankid"
-        size="xl"
-        color="neutral"
-        :disabled="status === 'pending'"
-        @click="openDoor"
+    <UPageCard
+      title="Ingen fara!"
+      description="Fyll i koden från skåpet och klicka på knappen !! Giltiga koder = [CU-0001] & [CU-0002] !!"
+    >
+      <UInput
+        v-model="doorNumber"
+        label="Skåpnummer"
+        placeholder="Skriv in skåpnummer"
+        size="lg"
+        class="w-full"
       />
-    </UContainer>
+      <UButton
+        label="Öppna skåp"
+        size="lg"
+        color="primary"
+        class="w-full mt-4"
+        @click="reRoute()"
+      />
+    </UPageCard>
   </UContainer>
 </template>
 
 <script setup lang="ts">
-const route = useRoute();
-const doorId = route.params.doorId as string;
-
-const status = ref<"idle" | "pending" | "opened" | "failed">("idle");
-const message = ref("");
-
-let requestId: string | null = null;
-let interval: ReturnType<typeof setInterval> | null = null;
-
-async function openDoor() {
-  status.value = "pending";
-
-  const res = await $fetch("/api/door-access/start", {
-    method: "POST",
-    body: { doorId },
-  });
-
-  requestId = res.requestId;
-
-  window.location.href = res.startUrl;
-
-  interval = setInterval(async () => {
-    const state = await $fetch(`/api/door-access/${requestId}/status`);
-
-    status.value = state.status;
-
-    if (state.status === "opened") {
-      message.value = "Dörren är öppnad.";
-      clearInterval(interval!);
-    }
-
-    if (state.status === "failed") {
-      message.value = `BankID misslyckades: ${state.hintCode}`;
-      clearInterval(interval!);
-    }
-  }, 2000);
-}
+const doorNumber = ref("");
+const reRoute = () => {
+  if (doorNumber.value.trim() !== "") {
+    // Redirect to the dynamic route with the entered door number
+    window.location.href = `/${doorNumber.value}`;
+  } else {
+    alert("Vänligen ange ett giltigt skåpnummer.");
+  }
+};
 </script>
 
 <style scoped></style>
