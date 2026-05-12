@@ -1,14 +1,14 @@
 <template>
   <UContainer class="px-5 mt-5 mb-25">
     <UContainer
-      :class="`flex flex-col items-center gap-4 my-6 ${data.class.container}`"
+      :class="`flex flex-col items-center gap-4 my-6 ${doorData.class.container}`"
     >
       <!--<p v-if="status === 'pending'">Väntar på BankID...</p>
       <p v-if="message">{{ message }}</p>-->
       <UPageHeader
-        :title="`Välkommen till ${data.label}`"
+        :title="`Välkommen till ${doorData.label}`"
         :ui="{
-          title: `${data.class.text}`,
+          title: `${doorData.class.text}`,
         }"
       />
       <UButton
@@ -22,14 +22,13 @@
 </template>
 
 <script setup lang="ts">
-const route = useRoute();
-const doorId = route.params.id as string;
-
-const { data } = await useFetch(`/api/items/${doorId}`);
-onMounted(async () => {
-  console.log("Door ID from route:", doorId);
-  console.log("Door ID from route:", data.value);
+definePageMeta({
+  layout: "custom",
 });
+
+const doorData = useState("doorData");
+console.log("Door data in CustomHeader:", doorData.value);
+
 /*
 
 

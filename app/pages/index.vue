@@ -12,14 +12,15 @@
         v-model="doorNumber"
         label="Skåpnummer"
         placeholder="Skriv in skåpnummer"
-        size="lg"
+        size="xl"
         class="w-full"
       />
       <UButton
-        label="Öppna skåp"
-        size="lg"
+        label="Ta mig till rätt skåp"
+        size="xl"
         color="primary"
         class="w-full mt-4"
+        trailing-icon="gg:arrow-right"
         @click="reRoute()"
       />
     </UPageCard>

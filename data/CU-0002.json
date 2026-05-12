@@ -2,7 +2,7 @@
   "label": "Dörr 2",
   "doorId": "0002",
   "class": {
-    "container": "bg-default rounded-lg p-4 border-2 border-primary",
+    "container": "bg-elevated rounded-lg p-4 border-2 border-primary",
     "text": "text-white"
   }
 }
