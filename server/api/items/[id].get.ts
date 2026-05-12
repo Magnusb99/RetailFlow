@@ -4,22 +4,23 @@ import { join } from 'node:path'
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
-  if (!id || !/^[a-zA-Z0-9_-]+$/.test(id)) {
+  if (!id) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Ogiltigt id'
+      statusMessage: 'Missing id'
     })
   }
 
-  try {
-    const filePath = join(process.cwd(), 'data', `${id}.json`)
-    const file = await readFile(filePath, 'utf-8')
+  const filePath = join(
+    process.cwd(),
+    'server',
+    'data',
+    `${id}.json`
+  )
 
-    return JSON.parse(file)
-  } catch {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Hittade ingen data för detta id'
-    })
-  }
+  console.log(filePath)
+
+  const file = await readFile(filePath, 'utf-8')
+
+  return JSON.parse(file)
 })
