@@ -1,15 +1,13 @@
 <template>
-  <UContainer class="px-5 mt-5 mb-25">
+  <UContainer :class="`px-5 mt-5 mb-25 ${doorData.class.body}`">
     <UContainer
       :class="`flex flex-col items-center gap-4 my-6 ${doorData.class.container}`"
+      :style="doorData.style.container"
     >
-      <!--<p v-if="status === 'pending'">Väntar på BankID...</p>
-      <p v-if="message">{{ message }}</p>-->
       <UPageHeader
         :title="`Välkommen till ${doorData.label}`"
-        :ui="{
-          title: `${doorData.class.text}`,
-        }"
+        :description="doorData.description"
+        :ui="{ title: doorData.class.text, description: doorData.class.text }"
       />
       <UButton
         label="Öppna dörr med bankID"
