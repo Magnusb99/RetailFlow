@@ -10,11 +10,27 @@
         :ui="{ title: doorData.class.text, description: doorData.class.text }"
       />
       <UButton
+        v-if="uiStatus === 'idle'"
         label="Öppna dörr med bankID"
         leading-icon="arcticons:bankid"
         size="xl"
         color="neutral"
+        @click="startAuth"
       />
+      <template v-if="uiStatus === 'waiting'">
+        <img
+          v-if="qrCode"
+          :src="`data:image/png;base64,${qrCode}`"
+          alt="BankID QR-kod"
+        />
+        <p v-else>Öppna BankID-appen på din telefon…</p>
+        <p v-if="hintCode">{{ hintCode }}</p>
+      </template>
+      <p v-if="uiStatus === 'opened'">✅ Dörren är öppen!</p>
+      <p v-if="uiStatus === 'failed'">❌ Något gick fel: {{ hintCode }}</p>
+      <p v-if="uiStatus === 'blocked'">
+        ⛔ Dörren är blockerad: {{ hintCode }}
+      </p>
     </UContainer>
   </UContainer>
 </template>
@@ -23,53 +39,68 @@
 definePageMeta({
   layout: "custom",
 });
+export interface FederatedLoginResponse {
+  sessionId: string;
+  autoStartToken: string;
+  qrCode?: string;
+}
+// types/grandid.ts
+export interface DoorAccessResponse {
+  status: "pending" | "opened" | "failed" | "blocked";
+  hintCode?: string;
+  qrCode?: string;
+  autoStartToken?: string;
+  reason?: string;
+  user?: {
+    name: string;
+  };
+}
+export type UiStatus = "idle" | "waiting" | "opened" | "failed" | "blocked";
 
-const doorData = useState("doorData");
-console.log("Door data in CustomHeader:", doorData.value);
+const route = useRoute();
+const doorData = useState("doorData") as any;
+const doorId = route.params.id;
 
-/*
+const uiStatus = ref<UiStatus>("idle");
+const hintCode = ref("");
+const qrCode = ref("");
+let pollInterval: ReturnType<typeof setInterval>;
 
+const isMobile = () => /iPhone|Android/i.test(navigator.userAgent);
 
-:disabled="status === 'pending'"
-        @click="openDoor"
-const status = ref<"idle" | "pending" | "opened" | "failed">("idle");
-const message = ref("");
+async function startAuth() {
+  uiStatus.value = "waiting";
 
-let requestId: string | null = null;
-let interval: ReturnType<typeof setInterval> | null = null;
-
-
-async function openDoor() {
-  status.value = "pending";
-
-  const res = await $fetch("/api/door-access/start", {
+  // Första anropet startar sessionen
+  const result = (await $fetch(`/api/door-access/${doorId}`, {
     method: "POST",
-    body: { doorId },
-  });
+  })) as FederatedLoginResponse;
 
-  const route = useRoute();
-  let id = route.params.id;
+  if (isMobile() && result.autoStartToken) {
+    window.location.href = `https://app.bankid.com/?autostarttoken=${result.autoStartToken}&redirect=null`;
+  } else if (result.qrCode) {
+    qrCode.value = result.qrCode;
+  }
 
-  requestId = res.requestId;
+  // Börja polla samma endpoint
+  pollInterval = setInterval(poll, 2000);
+}
 
-  window.location.href = res.startUrl;
+async function poll() {
+  const result = (await $fetch(`/api/door-access/${doorId}`, {
+    method: "POST",
+  })) as DoorAccessResponse;
 
-  interval = setInterval(async () => {
-    const state = await $fetch(`/api/door-access/${requestId}/status`);
+  if (result.status === "pending") {
+    if (result.qrCode) qrCode.value = result.qrCode;
+    if (result.hintCode) hintCode.value = result.hintCode;
+    return;
+  }
 
-    status.value = state.status;
+  clearInterval(pollInterval);
+  uiStatus.value = result.status as UiStatus;
+  if (result.hintCode) hintCode.value = result.hintCode;
+}
 
-    if (state.status === "opened") {
-      message.value = "Dörren är öppnad.";
-      clearInterval(interval!);
-    }
-
-    if (state.status === "failed") {
-      message.value = `BankID misslyckades: ${state.hintCode}`;
-      clearInterval(interval!);
-    }
-  }, 2000);
-}*/
+onUnmounted(() => clearInterval(pollInterval));
 </script>
-
-<style scoped></style>

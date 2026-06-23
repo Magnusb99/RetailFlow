@@ -6,8 +6,7 @@
 </template>
 
 <script setup lang="ts">
-const doorData = useState("doorData");
-console.log("Door data in CustomHeader:", doorData.value);
+const doorData = useState("doorData") as any;
 </script>
 
 <style scoped></style>

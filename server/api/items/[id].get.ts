@@ -18,7 +18,6 @@ export default defineEventHandler(async (event) => {
     `${id}.json`
   )
 
-  console.log(filePath)
 
   const file = await readFile(filePath, 'utf-8')
 

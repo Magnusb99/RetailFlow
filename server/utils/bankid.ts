@@ -6,4 +6,5 @@ export const bankIdAgent = new https.Agent({
   cert: fs.readFileSync('./certs/bankid-test-client.crt'),
   key: fs.readFileSync('./certs/bankid-test-client.key'),
   ca: fs.readFileSync('./certs/bankid-test-ca.pem'),
-})*/
+})
+  */
