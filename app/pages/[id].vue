@@ -1,20 +1,30 @@
 <template>
-  <UContainer :class="`px-5 mt-5 mb-25 ${doorData.class.body}`">
-    <UContainer
-      :class="`flex flex-col items-center gap-4 my-6 ${doorData.class.container}`"
-      :style="doorData.style.container"
+  <UContainer
+    :class="`flex flex-col justify-center px-5 pb-5 bg-elevated ${doorData.class.body}`"
+  >
+    <UPageHeader
+      :title="`Välkommen till ${doorData.label}`"
+      :description="doorData.description"
+      :ui="{ title: doorData.class.text, description: doorData.class.text }"
+      orientation="vertical"
+    />
+
+    <UPageCard
+      :class="`flex flex-col items-center mt-5 ${doorData.class.container}`"
     >
-      <UPageHeader
-        :title="`Välkommen till ${doorData.label}`"
-        :description="doorData.description"
-        :ui="{ title: doorData.class.text, description: doorData.class.text }"
+      <UButton
+        icon="gg:lock"
+        class="mx-auto cursor-none rounded-full p-2"
+        variant="soft"
       />
+      <h2 class="font-semibold text-xl text-center">
+        Säker autentisering med bankID
+      </h2>
       <UButton
         v-if="uiStatus === 'idle'"
         label="Öppna dörr med bankID"
         leading-icon="arcticons:bankid"
         size="xl"
-        color="neutral"
         @click="startAuth"
       />
       <template v-if="uiStatus === 'waiting'">
@@ -31,7 +41,7 @@
       <p v-if="uiStatus === 'blocked'">
         ⛔ Dörren är blockerad: {{ hintCode }}
       </p>
-    </UContainer>
+    </UPageCard>
   </UContainer>
 </template>
 
@@ -60,7 +70,7 @@ export type UiStatus = "idle" | "waiting" | "opened" | "failed" | "blocked";
 const route = useRoute();
 const doorData = useState("doorData") as any;
 const doorId = route.params.id;
-
+const { applyTheme, resetTheme } = useTheme();
 const uiStatus = ref<UiStatus>("idle");
 const hintCode = ref("");
 const qrCode = ref("");
@@ -103,4 +113,17 @@ async function poll() {
 }
 
 onUnmounted(() => clearInterval(pollInterval));
+
+watchEffect(() => {
+  if (doorData.value) {
+    applyTheme(
+      doorData.value.primaryColor, // t.ex. "violet"
+      doorData.value.backgroundColor, // t.ex. "teal"
+    );
+  }
+});
+
+// Återställ när man lämnar sidan
+onUnmounted(() => resetTheme());
 </script>
+<style scoped></style>

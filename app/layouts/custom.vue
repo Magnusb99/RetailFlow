@@ -2,6 +2,7 @@
   <div>
     <CustomHeader :data="data" />
     <slot :data="data" />
+    <AppFooter />
   </div>
 </template>
 
