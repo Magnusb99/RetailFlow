@@ -9,6 +9,6 @@
   "class": {
     "body": "h-screen flex items-center justify-center bg-accented",
     "container": "rounded-lg p-4",
-    "text": "text-white"
+    "text": "text-center"
   }
 }

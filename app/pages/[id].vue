@@ -13,11 +13,12 @@
       :class="`flex flex-col items-center mt-5 ${doorData.class.container}`"
     >
       <UButton
-        icon="gg:lock"
-        class="mx-auto cursor-none rounded-full p-2"
+        icon="circum:lock"
+        class="mx-auto cursor-default! rounded-full p-2"
         variant="soft"
+        size="xl"
       />
-      <h2 class="font-semibold text-xl text-center">
+      <h2 class="font-semibold text-2xl text-center">
         Säker autentisering med bankID
       </h2>
       <UButton
@@ -41,6 +42,28 @@
       <p v-if="uiStatus === 'blocked'">
         ⛔ Dörren är blockerad: {{ hintCode }}
       </p>
+      <USeparator class="my-2" />
+      <div class="flex items-center gap-2 mr-auto">
+        <UButton
+          icon="uiw:safety"
+          class="mx-auto cursor-default! rounded-full p-2"
+          variant="soft"
+        />
+
+        <p class="text-dimmed font-medium">
+          Krypterad anslutning enligt högsta säkerhetsstandard.
+        </p>
+      </div>
+      <div class="flex items-center gap-2 mr-auto">
+        <UButton
+          icon="uiw:verification"
+          class="mx-auto cursor-default! rounded-full p-2"
+          variant="soft"
+        />
+        <p class="text-dimmed font-medium">
+          Vi delar aldrig dina personuppgifter med obehöriga.
+        </p>
+      </div>
     </UPageCard>
   </UContainer>
 </template>
