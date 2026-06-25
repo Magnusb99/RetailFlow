@@ -1,9 +1,10 @@
-import { readFile } from 'node:fs/promises'
+import { readFile, readdir  } from 'node:fs/promises'
 import { join } from 'node:path'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
-
+ const taskDir = await readdir('/var/task', { recursive: true })
+  console.log('Files in /var/task:', JSON.stringify(taskDir, null, 2))
   if (!id) {
     throw createError({
       statusCode: 400,
