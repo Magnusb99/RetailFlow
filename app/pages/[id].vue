@@ -1,8 +1,10 @@
 <template>
   <UContainer
+    v-if="doorData"
     :class="`flex flex-col justify-center px-5 pb-5 bg-elevated ${doorData.class.body}`"
   >
     <UPageHeader
+      v-if="doorData"
       :title="`Välkommen till ${doorData.label}`"
       :description="doorData.description"
       :ui="{ title: doorData.class.text, description: doorData.class.text }"
@@ -10,6 +12,7 @@
     />
 
     <UPageCard
+      v-if="doorData"
       :class="`flex flex-col items-center mt-5 ${doorData.class.container}`"
     >
       <UButton
