@@ -1,17 +1,24 @@
-const items = import.meta.glob('../../server/data/*.json', { eager: true, import: 'default' })
+import { readFile  } from 'node:fs/promises'
+import { join } from 'node:path'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
-
   if (!id) {
-    throw createError({ statusCode: 400, statusMessage: 'Missing id' })
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Missing id'
+    })
   }
 
-  const item = items[`../../server/data/${id}.json`]
+  const filePath = join(
+    process.cwd(),
+    'server',
+    'data',
+    `${id}.json`
+  )
 
-  if (!item) {
-    throw createError({ statusCode: 404, statusMessage: 'Not found' })
-  }
 
-  return item
+  const file = await readFile(filePath, 'utf-8')
+
+  return JSON.parse(file)
 })
