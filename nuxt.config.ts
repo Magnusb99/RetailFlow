@@ -4,4 +4,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/hints', '@nuxt/ui', '@nuxt/eslint', "@pinia/nuxt"],
    css: ['~/assets/css/tailwind.css'],
+   nitro: {
+    serverAssets: [{
+      baseName: 'data',
+      dir: './server/data'
+    }]
+  }
 })
