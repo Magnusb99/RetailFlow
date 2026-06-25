@@ -4,6 +4,13 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/hints', '@nuxt/ui', '@nuxt/eslint', "@pinia/nuxt"],
    css: ['~/assets/css/tailwind.css'],
-   
+   nitro: {
+    storage: {
+      data: {
+        driver: 'fs',
+        base: './server/data'
+      }
+    }
+  }
   
 })
