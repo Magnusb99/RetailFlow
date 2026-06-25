@@ -7,7 +7,7 @@ export default defineNuxtConfig({
    nitro: {
     serverAssets: [{
       baseName: 'data',
-      dir: './server/data'
+      dir: 'server/data'
     }]
   }
 })
