@@ -94,7 +94,7 @@ const route = useRoute();
 const doorData = useState("doorData") as any;
 const doorId = route.params.id;
 
-const { applyTheme, resetTheme } = useTheme();
+const { resetTheme } = useTheme();
 const uiStatus = ref<UiStatus>("idle");
 const hintCode = ref("");
 const qrCode = ref("");
@@ -136,18 +136,9 @@ async function poll() {
   if (result.hintCode) hintCode.value = result.hintCode;
 }
 
-onUnmounted(() => clearInterval(pollInterval));
-
-watchEffect(async () => {
-  if (doorData.value) {
-    await applyTheme(
-      doorData.value.primaryColor, // t.ex. "violet"
-      doorData.value.backgroundColor, // t.ex. "teal"
-    );
-  }
+onUnmounted(() => {
+  clearInterval(pollInterval);
+  resetTheme();
 });
-
-// Återställ när man lämnar sidan
-onUnmounted(() => resetTheme());
 </script>
 <style scoped></style>

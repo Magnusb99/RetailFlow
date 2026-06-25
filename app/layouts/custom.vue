@@ -9,8 +9,8 @@
 <script setup lang="ts">
 const route = useRoute();
 const doorId = computed(() => route.params.id);
-
 const doorData = useState("doorData");
+const { applyTheme, resetTheme } = useTheme();
 
 const { data, error } = await useFetch(() => {
   const base = useRequestURL().origin;
@@ -25,11 +25,12 @@ if (error.value) {
   });
 }
 
-watch(
-  data,
-  (val) => {
-    doorData.value = val;
-  },
-  { immediate: true },
-);
+doorData.value = data.value;
+
+// Anropas direkt efter fetch — innan rendering
+if (data.value) {
+  await applyTheme(data.value.primaryColor, data.value.backgroundColor);
+}
+
+onUnmounted(() => resetTheme());
 </script>
