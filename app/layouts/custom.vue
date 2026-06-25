@@ -10,7 +10,7 @@
 const route = useRoute();
 const doorId = computed(() => route.params.id);
 const doorData = useState("doorData");
-let themeSet = false;
+const themeSet = ref(false);
 const { applyTheme, resetTheme } = useTheme();
 
 const { data, error } = await useFetch(() => {
@@ -28,10 +28,9 @@ if (error.value) {
 
 doorData.value = data.value;
 
-// Anropas direkt efter fetch — innan rendering
 if (data.value) {
   await applyTheme(data.value.primaryColor, data.value.backgroundColor);
-  themeSet = true;
+  themeSet.value = true;
 }
 
 onUnmounted(() => resetTheme());
