@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="data">
     <CustomHeader :data="data" />
     <slot :data="data" />
     <AppFooter />
