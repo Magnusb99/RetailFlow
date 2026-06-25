@@ -1,12 +1,12 @@
-// server/api/items/[id].get.ts
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
-  if (!id) {
-    throw createError({ statusCode: 400, statusMessage: 'Missing id' })
-  }
+  const keys = await useStorage('data').getKeys()
+  console.log('Storage keys:', keys)
+  console.log('Looking for:', `${id}.json`)
 
   const item = await useStorage('data').getItem(`${id}.json`)
+  console.log('Item found:', !!item)
 
   if (!item) {
     throw createError({ statusCode: 404, statusMessage: 'Not found' })
