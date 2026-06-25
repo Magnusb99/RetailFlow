@@ -26,15 +26,18 @@ const generateShades = (hex: string): Record<number, string> => {
 export default defineEventHandler((event) => {
   const query = getQuery(event)
   const primaryHex    = String(query.primary    ?? '#8B5E3C')
+  const secondaryHex  = String(query.secondary ?? '#e5e5e5')
   const backgroundHex = String(query.background ?? '#FAF7F4')
 
   const primaryShades = generateShades(primaryHex)
+  const secondaryShades = generateShades(secondaryHex)
   const neutralShades = generateShades(primaryHex)
 
   const bg = oklch(backgroundHex)!
 
   return {
     primary: primaryShades,
+    secondary: secondaryShades,
     neutral: neutralShades,
     bg: {
       default:  formatCss(bg),

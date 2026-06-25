@@ -3,18 +3,13 @@ import type { NavigationMenuItem } from "@nuxt/ui";
 
 const items: NavigationMenuItem[] = [
   {
-    label: "Figma Kit",
-    to: "https://go.nuxt.com/figma-ui",
+    label: "Wolkano",
+    to: "https://wolkano.se/",
     target: "_blank",
   },
   {
-    label: "Playground",
-    to: "https://stackblitz.com/edit/nuxt-ui",
-    target: "_blank",
-  },
-  {
-    label: "Releases",
-    to: "https://github.com/nuxt/ui/releases",
+    label: "Support",
+    to: "https://wolkano.se/kontakta",
     target: "_blank",
   },
 ];
@@ -29,7 +24,7 @@ const items: NavigationMenuItem[] = [
     </template>
 
     <UNavigationMenu :items="items" variant="link" />
-
+    <!--
     <template #right>
       <UButton
         icon="i-simple-icons-discord"
@@ -55,6 +50,6 @@ const items: NavigationMenuItem[] = [
         target="_blank"
         aria-label="GitHub"
       />
-    </template>
+    </template>-->
   </UFooter>
 </template>

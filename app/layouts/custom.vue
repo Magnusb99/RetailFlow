@@ -38,6 +38,7 @@ const css = ref("");
 if (data.value) {
   css.value = await applyTheme(
     data.value.primaryColor,
+    data.value.secondaryColor,
     data.value.backgroundColor,
   );
   themeSet.value = true;

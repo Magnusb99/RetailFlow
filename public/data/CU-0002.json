@@ -1,9 +1,13 @@
 {
-  "label": "Dörr 2",
+  "label": "Blomsterlandet",
   "doorId": "0002",
+  "description": "Blommor osv",
+  "primaryColor": "#005C3C",
+  "secondaryColor": "#FBED45",
+  "backgroundColor": "#FFFFFF",
   "class": {
-    "body": "bg-elevated! h-screen flex items-center justify-center",
-    "container": "bg-elevated rounded-lg p-4 border-2 border-primary",
-    "text": "text-white"
+    "body": "h-screen flex items-center justify-center bg-accented",
+    "container": "rounded-lg p-4",
+    "text": "text-center"
   }
 }
