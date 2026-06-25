@@ -1,27 +1,17 @@
-import { readFile, readdir  } from 'node:fs/promises'
-import { join } from 'node:path'
+const items = import.meta.glob('../../server/data/*.json', { eager: true, import: 'default' })
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
- const taskDir = await readdir('/var/task', { recursive: true })
-  console.log('Files in /var/task:', JSON.stringify(taskDir, null, 2))
+
   if (!id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Missing id'
-    })
+    throw createError({ statusCode: 400, statusMessage: 'Missing id' })
   }
 
-  const filePath = join(
-    process.cwd(),
-    'server',
-    'data',
-    `${id}.json`
-  )
+  const item = items[`../../server/data/${id}.json`]
 
-  console.log("FILEPAT: ", filePath);
+  if (!item) {
+    throw createError({ statusCode: 404, statusMessage: 'Not found' })
+  }
 
-  const file = await readFile(filePath, 'utf-8')
-
-  return JSON.parse(file)
+  return item
 })
