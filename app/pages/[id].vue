@@ -137,9 +137,9 @@ async function poll() {
 
 onUnmounted(() => clearInterval(pollInterval));
 
-watchEffect(() => {
+watchEffect(async () => {
   if (doorData.value) {
-    applyTheme(
+    await applyTheme(
       doorData.value.primaryColor, // t.ex. "violet"
       doorData.value.backgroundColor, // t.ex. "teal"
     );

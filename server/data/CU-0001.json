@@ -2,10 +2,8 @@
   "label": "Solsting",
   "doorId": "0001",
   "description": "Solariumet för alla som älskar solen! Här kan du njuta av en solig atmosfär året runt, oavsett väder. Vårt solarium är utrustat med den senaste tekniken för att ge dig en säker och effektiv solupplevelse. Oavsett om du vill få en gyllenbrun hudton eller bara koppla av i en solig miljö, är Solsting det perfekta stället för dig. Kom och upplev värmen och glädjen av solen hos oss!",
-
   "primaryColor": "#2A180C",
   "backgroundColor": "#F8EEE0",
-
   "class": {
     "body": "h-screen flex items-center justify-center bg-accented",
     "container": "rounded-lg p-4",
