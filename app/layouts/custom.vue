@@ -12,7 +12,7 @@ const doorId = computed(() => route.params.id);
 
 const doorData = useState("doorData");
 
-const { data, error } = await useFetch(() => `/api/items/${doorId.value}`);
+const { data, error } = await useFetch(() => `/data/${doorId.value}.json`);
 
 if (error.value) {
   throw createError({
