@@ -1,5 +1,5 @@
 <template>
-  <div v-if="data">
+  <div v-if="data && themeSet">
     <CustomHeader :data="data" />
     <slot :data="data" />
     <AppFooter />
@@ -10,6 +10,7 @@
 const route = useRoute();
 const doorId = computed(() => route.params.id);
 const doorData = useState("doorData");
+let themeSet = false;
 const { applyTheme, resetTheme } = useTheme();
 
 const { data, error } = await useFetch(() => {
@@ -30,6 +31,7 @@ doorData.value = data.value;
 // Anropas direkt efter fetch — innan rendering
 if (data.value) {
   await applyTheme(data.value.primaryColor, data.value.backgroundColor);
+  themeSet = true;
 }
 
 onUnmounted(() => resetTheme());
