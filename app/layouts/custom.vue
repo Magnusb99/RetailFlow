@@ -12,7 +12,21 @@ const doorId = computed(() => route.params.id);
 
 const doorData = useState("doorData");
 
-const { data } = await useFetch(() => `/api/items/${doorId.value}`);
+const { data, error } = await useFetch(() => `/api/items/${doorId.value}`);
 
-doorData.value = data.value;
+if (error.value) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: "Item not found",
+    fatal: true,
+  });
+}
+
+watch(
+  data,
+  (val) => {
+    doorData.value = val;
+  },
+  { immediate: true },
+);
 </script>

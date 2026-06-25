@@ -93,6 +93,7 @@ export type UiStatus = "idle" | "waiting" | "opened" | "failed" | "blocked";
 const route = useRoute();
 const doorData = useState("doorData") as any;
 const doorId = route.params.id;
+
 const { applyTheme, resetTheme } = useTheme();
 const uiStatus = ref<UiStatus>("idle");
 const hintCode = ref("");
