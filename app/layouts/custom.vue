@@ -1,5 +1,5 @@
 <template>
-  <div v-if="doorData">
+  <div v-if="data">
     <CustomHeader :data="data" />
     <slot :data="data" />
     <AppFooter />
@@ -12,7 +12,15 @@ const doorId = route.params.id as string;
 
 const doorData = useState("doorData");
 
-const { data } = await useFetch(`/api/items/${doorId}`);
+const { data, error } = await useFetch(`/api/items/${doorId}`);
+
+if (error.value) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: "Item not found",
+    fatal: true,
+  });
+}
 
 doorData.value = data.value;
 </script>
