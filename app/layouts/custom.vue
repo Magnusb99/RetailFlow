@@ -1,8 +1,13 @@
 <template>
-  <div v-if="data && themeSet">
-    <CustomHeader :data="data" />
-    <slot :data="data" />
-    <AppFooter />
+  <div>
+    <div v-if="data && themeSet">
+      <CustomHeader :data="data" />
+      <slot :data="data" />
+      <AppFooter />
+    </div>
+    <div v-else>
+      <p>Laddar in sida</p>
+    </div>
   </div>
 </template>
 
@@ -28,10 +33,19 @@ if (error.value) {
 
 doorData.value = data.value;
 
+const css = ref("");
+
 if (data.value) {
-  await applyTheme(data.value.primaryColor, data.value.backgroundColor);
+  css.value = await applyTheme(
+    data.value.primaryColor,
+    data.value.backgroundColor,
+  );
   themeSet.value = true;
 }
 
+// useHead anropas synkront i setup-kontexten
+useHead({
+  style: [{ innerHTML: () => `:root { ${css.value} }` }],
+});
 onUnmounted(() => resetTheme());
 </script>
