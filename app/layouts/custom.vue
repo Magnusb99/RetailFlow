@@ -12,7 +12,7 @@ const doorId = computed(() => route.params.id);
 
 const doorData = useState("doorData");
 
-const { data } = await useFetch(() => `api/data/${doorId.value}.json`);
+const { data } = await useFetch(() => `/api/items/${doorId.value}`);
 
 doorData.value = data.value;
 </script>
