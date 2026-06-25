@@ -1,16 +1,25 @@
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
   if (!id) {
-    throw createError({ statusCode: 400, statusMessage: 'Missing id' })
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Missing id'
+    })
   }
 
-  const asset = await useStorage('assets:data').getItem(`${id}.json`)
+  const filePath = join(
+    process.cwd(),
+    'server',
+    'data',
+    `${id}.json`
+  )
 
-  if (!asset) {
-    throw createError({ statusCode: 404, statusMessage: 'Not found' })
-  }
 
-  return asset
+  const file = await readFile(filePath, 'utf-8')
+
+  return JSON.parse(file)
 })
