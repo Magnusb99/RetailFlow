@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     const form = new FormData();
     form.append("apiKey", process.env.BANKID_API_KEY!);
     form.append("authenticateServiceKey", process.env.BANKID_SERVICE_KEY!);
-    form.append("returnUrl", `${process.env.LOCAL_URL}/${doorId}?bankid=1`);
+    form.append("returnUrl", `${process.env.PUBLIC_URL}/${doorId}?bankid=1`);
     form.append("gui", "false");
     form.append("mobileBankId", "true");
 

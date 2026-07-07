@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
 
   //console.log("\n Session completed successfully. User details:", {name,givenName,surname,personalNumber,});
 
-  await $fetch(`${process.env.PUBLIC_URL}/api/unlock`, {
+  await $fetch(`${process.env.RASPI_BASE_URL}/api/unlock`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: { name, givenName, surname, personalNumber },
