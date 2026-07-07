@@ -12,30 +12,28 @@
     <UPageCard
       :class="`flex flex-col items-center mt-5 ${doorData.class.container}`"
     >
-      <UButton
-        icon="circum:lock"
-        class="mx-auto cursor-default! rounded-full p-2"
-        variant="soft"
-        size="xl"
-      />
-      <h2 class="font-semibold text-2xl text-center">
-        Säker autentisering med bankID
-      </h2>
+      <div class="mx-auto">
+        <img
+          :src="`/logos/${doorData.bankID}`"
+          alt=""
+          class="h-30 w-auto object-contain"
+        />
+      </div>
+      <h2 class="font-semibold text-2xl text-center">Säker autentisering</h2>
       <UButton
         v-if="uiStatus === 'idle'"
-        label="Öppna dörr med bankID"
-        leading-icon="arcticons:bankid"
+        class="justify-center"
+        label="Lås upp med BankID"
+        trailing-icon="mdi:arrow-right"
         size="xl"
         @click="startAuth"
       />
       <template v-if="uiStatus === 'waiting'">
-        <img
-          v-if="qrCode"
-          :src="`data:image/png;base64,${qrCode}`"
-          alt="BankID QR-kod"
-        />
-        <p v-else>Öppna BankID-appen på din telefon…</p>
         <p v-if="hintCode">{{ hintCode }}</p>
+        <div class="flex flex-col items-center justify-center gap-4">
+          <Icon name="svg-spinners:3-dots-bounce" size="30" />
+          <p>Väntar på bankId...</p>
+        </div>
       </template>
       <p v-if="uiStatus === 'opened'">✅ Dörren är öppen!</p>
       <p v-if="uiStatus === 'failed'">❌ Något gick fel: {{ hintCode }}</p>
@@ -106,27 +104,29 @@ async function startAuth() {
   uiStatus.value = "waiting";
 
   // Första anropet startar sessionen
-  const result = (await $fetch(`/api/door-access/${doorId}`, {
+  const result = (await $fetch(`/api/door-access/${doorId}/login`, {
     method: "POST",
   })) as FederatedLoginResponse;
 
   if (isMobile() && result.autoStartToken) {
-    window.location.href = `https://app.bankid.com/?autostarttoken=${result.autoStartToken}&redirect=null`;
-  } else if (result.qrCode) {
-    qrCode.value = result.qrCode;
+    window.location.href = `https://app.bankid.com/?autostarttoken=${result.autoStartToken}`;
   }
 
   // Börja polla samma endpoint
-  pollInterval = setInterval(poll, 2000);
+  if (result.sessionId) {
+    pollInterval = setInterval(poll, 5000);
+  } else {
+    console.error("No sessionId returned from login endpoint.");
+    uiStatus.value = "failed";
+  }
 }
 
 async function poll() {
-  const result = (await $fetch(`/api/door-access/${doorId}`, {
+  const result = (await $fetch(`/api/door-access/${doorId}/session`, {
     method: "POST",
   })) as DoorAccessResponse;
 
   if (result.status === "pending") {
-    if (result.qrCode) qrCode.value = result.qrCode;
     if (result.hintCode) hintCode.value = result.hintCode;
     return;
   }
@@ -135,7 +135,17 @@ async function poll() {
   uiStatus.value = result.status as UiStatus;
   if (result.hintCode) hintCode.value = result.hintCode;
 }
+onMounted(() => {
+  const cameFromBankId = route.query.bankid === "1";
 
+  if (cameFromBankId) {
+    clearInterval(pollInterval);
+    uiStatus.value = "waiting";
+    pollInterval = setInterval(poll, 2500);
+  } else {
+    uiStatus.value = "idle";
+  }
+});
 onUnmounted(() => {
   clearInterval(pollInterval);
   resetTheme();

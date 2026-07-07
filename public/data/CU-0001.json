@@ -5,6 +5,7 @@
   "primaryColor": "#2A180C",
   "secondaryColor": "#FFFFFF",
   "backgroundColor": "#F8EEE0",
+  "bankID": "BankID_logo_neg.png",
   "class": {
     "body": "h-screen flex items-center justify-center bg-accented",
     "container": "rounded-lg p-4",

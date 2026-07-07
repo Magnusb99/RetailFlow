@@ -1,8 +1,8 @@
 // server/utils/sessions.ts
 interface DoorSession {
-  doorId: string
-  sessionId: string
+  doorId: string;
+  sessionId: string;
 }
 
-export const activeSessions = new Map<string, DoorSession>()
+export const activeSessions = new Map<string, DoorSession>();
 // Key = doorId, value = aktiv session
