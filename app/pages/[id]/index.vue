@@ -29,14 +29,28 @@
         @click="startAuth"
       />
       <template v-if="uiStatus === 'waiting'">
-        <p v-if="hintCode">{{ hintCode }}</p>
         <div class="flex flex-col items-center justify-center gap-4">
           <Icon name="svg-spinners:3-dots-bounce" size="30" />
           <p>Väntar på bankId...</p>
         </div>
       </template>
       <p v-if="uiStatus === 'opened'">✅ Dörren är öppen!</p>
-      <p v-if="uiStatus === 'failed'">❌ Något gick fel: {{ hintCode }}</p>
+      <div
+        v-if="uiStatus === 'failed'"
+        class="flex flex-col items-center justify-center gap-4"
+      >
+        <p
+          v-if="hintCode"
+          class="font-medium bg-error/10 text-error py-2 px-4 rounded-sm ring ring-inset ring-error/25"
+        >
+          {{ friendlyError(hintCode) }}
+        </p>
+        <p
+          class="font-medium bg-error/10 text-error py-2 px-4 rounded-sm ring ring-inset ring-error/25"
+        >
+          {{ errorMsg }}
+        </p>
+      </div>
       <p v-if="uiStatus === 'blocked'">
         ⛔ Dörren är blockerad: {{ hintCode }}
       </p>
@@ -70,32 +84,27 @@
 definePageMeta({
   layout: "custom",
 });
-export interface FederatedLoginResponse {
-  sessionId: string;
-  autoStartToken: string;
-  qrCode?: string;
+
+const hintMessages: Record<string, string> = {
+  userCancel: "Du avbröt inloggningen.",
+  expiredTransaction: "Sessionen gick ut. Försök igen.",
+  certificateErr: "Det uppstod ett problem med ditt BankID.",
+  startFailed:
+    "BankID kunde inte startas. Kontrollera att appen är installerad.",
+};
+
+function friendlyError(code?: string): string {
+  if (!code) return "Ett okänt fel uppstod.";
+  return hintMessages[code] ?? "Något gick fel. Försök igen.";
 }
-// types/grandid.ts
-export interface DoorAccessResponse {
-  status: "pending" | "opened" | "failed" | "blocked";
-  hintCode?: string;
-  qrCode?: string;
-  autoStartToken?: string;
-  reason?: string;
-  user?: {
-    name: string;
-  };
-}
-export type UiStatus = "idle" | "waiting" | "opened" | "failed" | "blocked";
 
 const route = useRoute();
 const doorData = useState("doorData") as any;
 const doorId = route.params.id;
-
+const errorMsg = ref("");
 const { resetTheme } = useTheme();
 const uiStatus = ref<UiStatus>("idle");
 const hintCode = ref("");
-const qrCode = ref("");
 let pollInterval: ReturnType<typeof setInterval>;
 
 const isMobile = () => /iPhone|Android/i.test(navigator.userAgent);
@@ -103,37 +112,53 @@ const isMobile = () => /iPhone|Android/i.test(navigator.userAgent);
 async function startAuth() {
   uiStatus.value = "waiting";
 
-  // Första anropet startar sessionen
-  const result = (await $fetch(`/api/door-access/${doorId}/login`, {
-    method: "POST",
-  })) as FederatedLoginResponse;
-
-  if (isMobile() && result.autoStartToken) {
-    window.location.href = `https://app.bankid.com/?autostarttoken=${result.autoStartToken}`;
+  if (!isMobile()) {
+    errorMsg.value =
+      "BankID-autentisering fungerar endast på mobila enheter. Vänligen använd en mobiltelefon eller surfplatta.";
+    uiStatus.value = "failed";
+    return;
   }
 
-  // Börja polla samma endpoint
-  if (result.sessionId) {
-    pollInterval = setInterval(poll, 5000);
-  } else {
-    console.error("No sessionId returned from login endpoint.");
+  try {
+    const result = (await $fetch(`/api/door-access/${doorId}/login`, {
+      method: "POST",
+    })) as FederatedLoginResponse;
+
+    if (!result.autoStartToken) {
+      errorMsg.value = "Ingen session kunde startas. Försök igen.";
+      uiStatus.value = "failed";
+      return;
+    }
+
+    window.location.href = `https://app.bankid.com/?autostarttoken=${result.autoStartToken}`;
+  } catch (err) {
+    errorMsg.value =
+      err instanceof Error
+        ? err.message
+        : "Ett fel uppstod vid start av autentisering.";
     uiStatus.value = "failed";
   }
 }
 
 async function poll() {
-  const result = (await $fetch(`/api/door-access/${doorId}/session`, {
-    method: "POST",
-  })) as DoorAccessResponse;
+  try {
+    const result = (await $fetch(`/api/door-access/${doorId}/session`, {
+      method: "POST",
+    })) as DoorAccessResponse;
 
-  if (result.status === "pending") {
+    if (result.status === "pending") {
+      if (result.hintCode) hintCode.value = result.hintCode;
+      return;
+    }
+
+    clearInterval(pollInterval);
+    uiStatus.value = result.status as UiStatus;
     if (result.hintCode) hintCode.value = result.hintCode;
-    return;
+  } catch (err) {
+    clearInterval(pollInterval);
+    errorMsg.value = "Kunde inte kontrollera status. Försök igen.";
+    uiStatus.value = "failed";
   }
-
-  clearInterval(pollInterval);
-  uiStatus.value = result.status as UiStatus;
-  if (result.hintCode) hintCode.value = result.hintCode;
 }
 onMounted(() => {
   const cameFromBankId = route.query.bankid === "1";

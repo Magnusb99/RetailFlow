@@ -1,6 +1,4 @@
 // Aktiv session – polla status
-import { activeSessions } from "../../../utils/sessions";
-import type { GetSessionResponse } from "../../../../app/composables/types";
 
 export default defineEventHandler(async (event) => {
   const doorId = getRouterParam(event, "id")!;
@@ -44,13 +42,21 @@ export default defineEventHandler(async (event) => {
   const { name, givenName, surname, personalNumber } = res.userAttributes!;
 
   //console.log("\n Session completed successfully. User details:", {name,givenName,surname,personalNumber,});
-
-  await $fetch(`${process.env.RASPI_BASE_URL}/api/unlock`, {
+  /*
+  await $fetch(`${process.env.RASPI_BASE_URL}/unlock`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-unlock-secret": process.env.UNLOCK_SHARED_SECRET!,
+    },
     body: { name, givenName, surname, personalNumber },
   });
 
+  pendingUnlocks.set(doorId, {
+    name,
+    timestamp: new Date().toISOString(),
+  });
+*/
   activeSessions.delete(doorId);
   console.log("\n Session deleted at the end");
   return { status: "opened", user: { name } };
