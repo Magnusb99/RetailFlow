@@ -3,9 +3,9 @@
 export default defineEventHandler(async (event) => {
   const doorId = getRouterParam(event, "id")!;
 
-  if (!isValidDoorId(doorId)) {
-    throw createError({ statusCode: 404, statusMessage: "Unknown door" });
-  }
+  if (!(await isValidDoorId(doorId))) {
+  throw createError({ statusCode: 404, statusMessage: "Unknown door" });
+}
 
   console.log("Door ID in login.post.ts:", doorId);
 
