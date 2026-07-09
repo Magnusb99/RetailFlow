@@ -1,23 +1,16 @@
-// server/api/door-access/[id]/login.post.ts
-
 export default defineEventHandler(async (event) => {
   const doorId = getRouterParam(event, "id")!;
-/*
-  if (!(await isValidDoorId(doorId))) {
-  throw createError({ statusCode: 404, statusMessage: "Unknown door" });
-}
-*/
-  console.log("Door ID in login.post.ts:", doorId);
 
-  if (isRateLimited(doorId)) {
-    throw createError({
-      statusCode: 429,
-      statusMessage: "Too Many Requests",
-    });
+  const item = await useStorage("data").getItem(`${doorId}.json`);
+  if (!item) {
+    throw createError({ statusCode: 404, statusMessage: "Unknown door" });
   }
 
-  // Rensa ev. gammal/kvarvarande session — login ska alltid börja om
-  activeSessions.delete(doorId);
+  if (isRateLimited(doorId)) {
+    throw createError({ statusCode: 429, statusMessage: "Too Many Requests" });
+  }
+
+  await deleteActiveSession(doorId);
 
   const form = new FormData();
   form.append("apiKey", process.env.BANKID_API_KEY!);
@@ -29,12 +22,12 @@ export default defineEventHandler(async (event) => {
   const res = await $fetch<{
     sessionId: string;
     autoStartToken: string;
-  }>("https://client.grandid.com/json1.1/FederatedLogin", {
+  }>("https://client-test.grandid.com/json1.1/FederatedLogin", {
     method: "POST",
     body: form,
   });
 
-  activeSessions.set(doorId, { doorId, sessionId: res.sessionId });
+  await setActiveSession(doorId, res.sessionId);
 
   return {
     status: "pending",
