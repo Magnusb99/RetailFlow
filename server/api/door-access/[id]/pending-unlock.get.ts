@@ -1,3 +1,5 @@
+//pending-unlock.get.ts
+
 export default defineEventHandler(async (event) => {
   const doorId = getRouterParam(event, "id")!;
   /*
@@ -11,19 +13,15 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 403, statusMessage: "Forbidden" });
   }
 
-  const pending = pendingUnlocks.get(doorId);
-  console.log(
-    "Pending unlock for door ID:",
-    doorId,
-    "Pending details:",
-    pending,
-  );
+  // pending-unlock.get.ts
+  const pending = await getPendingUnlock(doorId);
+
   if (!pending) {
     return { shouldUnlock: false };
   }
+  console.log("Pending unlock found for door ID:", doorId, "Details:", pending);
 
-  // Viktigt: ta bort direkt så samma unlock inte konsumeras två gånger
-  pendingUnlocks.delete(doorId);
+  await deletePendingUnlock(doorId);
 
   return {
     shouldUnlock: true,

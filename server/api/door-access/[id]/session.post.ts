@@ -53,11 +53,10 @@ export default defineEventHandler(async (event) => {
   });
 */
   console.log("\n Unlock request sent to Raspberry Pi for user:", name);
-  pendingUnlocks.set(doorId, {
+  await setPendingUnlock(doorId, {
     name,
     timestamp: new Date().toISOString(),
   });
-  console.log("\n Pending unlock set for door ID:", pendingUnlocks.get(doorId));
   activeSessions.delete(doorId);
   console.log("\n Session deleted at the end");
   return { status: "opened", user: { name } };
