@@ -51,12 +51,12 @@ export default defineEventHandler(async (event) => {
     },
     body: { name, givenName, surname, personalNumber },
   });
-
+*/
   pendingUnlocks.set(doorId, {
     name,
     timestamp: new Date().toISOString(),
   });
-*/
+
   activeSessions.delete(doorId);
   console.log("\n Session deleted at the end");
   return { status: "opened", user: { name } };
