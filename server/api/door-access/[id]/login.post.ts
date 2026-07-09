@@ -1,11 +1,11 @@
 export default defineEventHandler(async (event) => {
   const doorId = getRouterParam(event, "id")!;
-
+  /*
   const item = await useStorage("data").getItem(`${doorId}.json`);
   if (!item) {
     throw createError({ statusCode: 404, statusMessage: "Unknown door" });
   }
-
+*/
   if (isRateLimited(doorId)) {
     throw createError({ statusCode: 429, statusMessage: "Too Many Requests" });
   }

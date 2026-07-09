@@ -13,7 +13,6 @@ export default defineEventHandler(async (event) => {
   }
 
   // pending-unlock.get.ts
-  console.log("Söker pending unlock för doorId:", JSON.stringify(doorId));
   const pending = await getPendingUnlock(doorId);
 
   if (!pending) {
