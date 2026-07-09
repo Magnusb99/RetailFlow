@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
   const res = await $fetch<{
     sessionId: string;
     autoStartToken: string;
-  }>("https://client-test.grandid.com/json1.1/FederatedLogin", {
+  }>("https://client.grandid.com/json1.1/FederatedLogin", {
     method: "POST",
     body: form,
   });
