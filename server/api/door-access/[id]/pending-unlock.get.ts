@@ -8,7 +8,6 @@ export default defineEventHandler(async (event) => {
   }
 */
   const secret = getHeader(event, "x-unlock-secret");
-  console.log(secret + " vs " + process.env.UNLOCK_SHARED_SECRET);
   if (secret !== process.env.UNLOCK_SHARED_SECRET) {
     throw createError({ statusCode: 403, statusMessage: "Forbidden" });
   }
