@@ -52,11 +52,12 @@ export default defineEventHandler(async (event) => {
     body: { name, givenName, surname, personalNumber },
   });
 */
+  console.log("\n Unlock request sent to Raspberry Pi for user:", name);
   pendingUnlocks.set(doorId, {
     name,
     timestamp: new Date().toISOString(),
   });
-
+  console.log("\n Pending unlock set for door ID:", pendingUnlocks.get(doorId));
   activeSessions.delete(doorId);
   console.log("\n Session deleted at the end");
   return { status: "opened", user: { name } };
