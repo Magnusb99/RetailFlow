@@ -35,7 +35,6 @@ export default defineEventHandler(async (event) => {
 
   // Komplett
   const { name } = res.userAttributes!;
-console.log("\n BankID: ", res.userAttributes);
   // session.post.ts
   console.log("Sparar pending unlock för doorId:", JSON.stringify(doorId));
   await setPendingUnlock(doorId, { name, timestamp: new Date().toISOString() });
